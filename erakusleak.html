@@ -1,0 +1,304 @@
+<!doctype html>
+<html lang="eu">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Erakusleak deklinatuta</title>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#fff1b8;--card:#fffdf3;--ink:#14213d;--mut:#6a5a1e;--acc:#2457d6;--accink:#ffffff;--mint:#0f8f82;--line:#e8cf7a;--key:#ffe48a;--ok:#12805c;--okbg:#d8f5e8;--bad:#c92a4b;--badbg:#ffe1e7;--hl:#cfe0ff;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){color-scheme:dark;--bg:#2a2208;--card:#3a2f0f;--ink:#fff4cf;--mut:#d6c78d;--acc:#8fb0ff;--accink:#0e1d4a;--mint:#3fd6c5;--line:#5f5120;--key:#4d3f12;--ok:#6ee7b0;--okbg:#14382f;--bad:#ff8aa1;--badbg:#42202a;--hl:#2c3d6e}}
+:root[data-theme="dark"]{color-scheme:dark;--bg:#2a2208;--card:#3a2f0f;--ink:#fff4cf;--mut:#d6c78d;--acc:#8fb0ff;--accink:#0e1d4a;--mint:#3fd6c5;--line:#5f5120;--key:#4d3f12;--ok:#6ee7b0;--okbg:#14382f;--bad:#ff8aa1;--badbg:#42202a;--hl:#2c3d6e}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font-family:"Baloo 2",system-ui,-apple-system,"Segoe UI",sans-serif;font-weight:500;min-height:100%}
+main{max-width:480px;margin:0 auto;padding:16px 16px 32px}
+h1{font-size:1.6rem;font-weight:800;margin:4px 0 12px;text-align:center}
+.back{display:inline-block;margin:0 0 8px;color:var(--mut);font:700 1rem "Baloo 2",system-ui,sans-serif;text-decoration:none}
+.back:hover{color:var(--ink)}
+.path{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+.dot{width:46px;height:46px;border-radius:50%;border:3px solid var(--line);background:var(--card);color:var(--ink);font:800 1.1rem "Baloo 2",system-ui,sans-serif;cursor:pointer}
+.dot[disabled]{opacity:.45;cursor:not-allowed}
+.dot.on{background:var(--acc);border-color:var(--ink);color:var(--accink)}
+.dot.done{border-color:var(--mint)}
+.card{background:var(--card);border-radius:22px;padding:20px 16px;border:2px solid var(--line)}
+.meta{display:flex;justify-content:space-between;color:var(--mut)}
+.bar{height:10px;background:var(--key);border-radius:9px;margin:8px 0 16px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--mint);width:0;transition:width .3s}
+.task{text-align:center;font-size:1.25rem;color:var(--mut);margin:0 0 12px}
+.big2{font-size:2.3rem;font-weight:800;text-align:center;line-height:1.2;margin:4px 0 14px}
+.tag{display:inline-block;background:var(--acc);color:var(--accink);border-radius:12px;padding:2px 14px;font-weight:800;font-size:1.3rem}
+.hint{text-align:center;color:var(--mut);margin:0 0 8px}
+.estop{font-size:1.25rem;font-weight:700;text-align:center;line-height:1.3;margin:0 0 8px}
+.sent{font-size:1.7rem;font-weight:800;text-align:center;line-height:1.3;margin:8px 0 16px}
+.sent b{background:var(--hl);color:var(--ink);border-radius:8px;padding:0 8px}
+input{width:100%;font:800 1.9rem "Baloo 2",system-ui,sans-serif;text-align:center;padding:10px;border:3px solid var(--ink);border-radius:14px;background:var(--card);color:var(--ink)}
+input.ok{border-color:var(--ok);color:var(--ok)}
+input.bad{border-color:var(--bad);color:var(--bad)}
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.cols>div,.opts{display:flex;flex-direction:column;gap:10px}
+.chip{font:800 1.3rem "Baloo 2",system-ui,sans-serif;padding:12px 8px;border-radius:14px;border:3px solid var(--line);background:var(--key);color:var(--ink);cursor:pointer}
+.chip.sel{border-color:var(--ink);background:var(--acc);color:var(--accink)}
+.chip.good{background:var(--okbg);border-color:var(--ok);color:var(--ok)}
+.chip.wrong{background:var(--badbg);border-color:var(--bad);color:var(--bad)}
+.fb{min-height:32px;text-align:center;font-size:1.2rem;font-weight:700;margin:12px 0 0}
+.fb.ok{color:var(--ok)}.fb.bad{color:var(--bad)}
+.ex{margin-top:12px;padding:12px 14px;border-radius:14px;background:var(--key);text-align:left;font-size:1.05rem;line-height:1.35}
+.ex .b{font-weight:800}
+.ex .es{color:var(--mut);font-style:italic;margin-top:2px}
+.go{display:block;width:100%;margin-top:12px;font:800 1.4rem "Baloo 2",system-ui,sans-serif;border:0;border-radius:16px;padding:12px 0;background:var(--acc);color:var(--accink);cursor:pointer}
+.go.sec{background:var(--key);color:var(--ink)}
+button:focus-visible,input:focus-visible{outline:4px solid var(--mint);outline-offset:2px}
+.end{text-align:center}
+.stars{font-size:2.6rem;letter-spacing:6px}
+.end p{font-size:1.2rem;margin:8px 0 16px}
+[hidden]{display:none!important}
+</style>
+</head>
+<body>
+<main>
+<a class="back" href="index.html">← Hasiera</a>
+<h1>Erakusleak deklinatuta</h1>
+<div class="path" id="path"></div>
+<section class="card" id="play">
+  <div class="meta"><span id="lname"></span><span id="count"></span></div>
+  <div class="bar"><i id="bar"></i></div>
+  <div id="stage"></div>
+  <div class="fb" id="fb" aria-live="polite"></div>
+  <div class="ex" id="ex" hidden></div>
+  <button class="go" id="go">Egiaztatu</button>
+</section>
+<section class="card end" id="end" hidden>
+  <div class="stars" id="stars"></div>
+  <h2 id="etitle"></h2>
+  <p id="etext"></p>
+  <button class="go" id="next"></button>
+  <button class="go sec" id="again">Maila errepikatu</button>
+</section>
+</main>
+<script>
+var DEM=["hau","hori","hura","hauek","horiek","haiek"];
+var DES=["este/esta","ese/esa","aquel/aquella","estos/estas","esos/esas","aquellos/aquellas"];
+var CASES=["NOR","NORK","NORI","NOREN","NOREKIN","NORENTZAT","NON","NONDIK","NORA","NORAINO","NORANTZ","NONGO","NORAKO"];
+var TAB=[
+["hau","hori","hura","hauek","horiek","haiek"],
+["honek","horrek","hark","hauek","horiek","haiek"],
+["honi","horri","hari","hauei","horiei","haiei"],
+["honen","horren","haren","hauen","horien","haien"],
+["honekin","horrekin","harekin","hauekin","horiekin","haiekin"],
+["honentzat","horrentzat","harentzat","hauentzat","horientzat","haientzat"],
+["honetan","horretan","hartan","hauetan","horietan","haietan"],
+["honetatik","horretatik","hartatik","hauetatik","horietatik","haietatik"],
+["honetara","horretara","hartara","hauetara","horietara","haietara"],
+["honetaraino","horretaraino","hartaraino","hauetaraino","horietaraino","haietaraino"],
+["honetarantz","horretarantz","hartarantz","hauetarantz","horietarantz","haietarantz"],
+["honetako","horretako","hartako","hauetako","horietako","haietako"],
+["honetarako","horretarako","hartarako","hauetarako","horietarako","haietarako"]
+];
+var REA=[
+"NOR (sin sufijo): sujeto de ser/estar o de un verbo intransitivo, o complemento directo.",
+"NORK (ergativo): sujeto de un verbo transitivo, es decir, quien hace la acción.",
+"NORI (dativo): a quién se da, se dice o se hace algo.",
+"NOREN (genitivo): de quién es algo (posesión o relación).",
+"NOREKIN (comitativo): con quién se hace algo.",
+"NORENTZAT: para quién es algo (destinatario o beneficiario).",
+"NON (inesivo): dónde ocurre algo (lugar donde).",
+"NONDIK (ablativo): de dónde viene algo o por dónde se pasa.",
+"NORA (adlativo): a dónde se va (destino).",
+"NORAINO: hasta dónde se llega (límite).",
+"NORANTZ: hacia dónde se va (dirección).",
+"NONGO: «de» un lugar; va delante de un nombre (honetako jendea).",
+"NORAKO: para dónde o para qué (destino o finalidad)."
+];
+var S=[[0, 0, "Liburu ___ oso interesgarria da.", "Este libro es muy interesante."], [0, 3, "Lagun ___ nire ikaskideak dira.", "Estos amigos son mis compañeros."], [0, 2, "Eraikin ___ duela ehun urte egin zuten.", "Aquel edificio lo construyeron hace cien años."], [0, 4, "Zapata ___ ez dira nireak.", "Esos zapatos no son míos."], [0, 1, "Mahai ___ oso zaharra da.", "Esa mesa es muy vieja."], [0, 5, "Mendi ___ elurrez beteta daude.", "Aquellas montañas están llenas de nieve."], [1, 0, "Mutil ___ ogia erosi du.", "Este chico ha comprado pan."], [1, 1, "Irakasle ___ ariketa asko jarri ditu.", "Ese profesor ha puesto muchos ejercicios."], [1, 2, "Emakume ___ liburutegian lan egiten du.", "Aquella mujer trabaja en la biblioteca."], [1, 3, "Ume ___ pilota galdu dute.", "Estos niños han perdido la pelota."], [1, 4, "Ikasle ___ ez dute etxeko lanik egin.", "Esos alumnos no han hecho los deberes."], [1, 5, "Gizon ___ etxe berria erosi dute.", "Aquellos hombres han comprado una casa nueva."], [2, 0, "Neska ___ liburu bat eman diot.", "A esta chica le he dado un libro."], [2, 1, "Mutil ___ telefonoa itzuli diot.", "A ese chico le he devuelto el teléfono."], [2, 2, "Irakasle ___ galdera bat egin nahi diot.", "Quiero hacerle una pregunta a aquel profesor."], [2, 3, "Ume ___ ipuin bat kontatuko diet.", "A estos niños les contaré un cuento."], [2, 4, "Lagun ___ gutun bat bidali diet.", "A esos amigos les he enviado una carta."], [2, 5, "Ikasle ___ azterketa zaila jarri die irakasleak.", "El profesor les ha puesto un examen difícil a aquellos alumnos."], [3, 0, "Neska ___ liburua mahaian dago.", "El libro de esta chica está sobre la mesa."], [3, 1, "Mutil ___ ahizpa irakaslea da.", "La hermana de ese chico es profesora."], [3, 2, "Emakume ___ seme-alabak ez daude hemen.", "Los hijos de aquella mujer no están aquí."], [3, 3, "Ume ___ gurasoak kanpoan daude.", "Los padres de estos niños están fuera."], [3, 4, "Irakasle ___ ikasleak oso zoriontsu daude.", "Los alumnos de esos profesores están muy contentos."], [3, 5, "Neska ___ etxea hemendik urrun dago.", "La casa de aquellas chicas está lejos de aquí."], [4, 0, "Mutil ___ futbolean jolasten dut.", "Juego al fútbol con este chico."], [4, 1, "Neska ___ hizketan ibili naiz goiz osoan.", "He estado hablando con esa chica toda la mañana."], [4, 2, "Emakume ___ lan egiten dut.", "Trabajo con aquella mujer."], [4, 3, "Lagun ___ mendira joango naiz.", "Iré al monte con estos amigos."], [4, 4, "Ikasle ___ ez naiz ondo konpontzen.", "No me llevo bien con esos alumnos."], [4, 5, "Gizon ___ bidaiatu nuen iaz.", "Viajé el año pasado con aquellos hombres."], [5, 0, "Mutil ___ opari bat erosi dut.", "He comprado un regalo para este chico."], [5, 1, "Neska ___ liburu hau gomendatzen dut.", "Recomiendo este libro para esa chica."], [5, 2, "Gizon ___ lan zaila da hori.", "Eso es un trabajo difícil para aquel hombre."], [5, 3, "Ume ___ jolasgela berri bat egin dute.", "Han hecho una nueva sala de juegos para estos niños."], [5, 4, "Ikasle ___ ariketa errazagoak prestatu ditut.", "He preparado ejercicios más fáciles para esos alumnos."], [5, 5, "Lagun ___ afaria prestatuko dut.", "Prepararé la cena para aquellos amigos."], [6, 0, "Auzo ___ bizi naiz.", "Vivo en este barrio."], [6, 1, "Denda ___ ogi ona saltzen dute.", "En esa tienda venden buen pan."], [6, 2, "Eskola ___ ikasi zuen nire aitak.", "Mi padre estudió en aquella escuela."], [6, 3, "Kale ___ ez dago autorik.", "En estas calles no hay coches."], [6, 4, "Mendi ___ ibili ginen iaz.", "El año pasado estuvimos caminando en esos montes."], [6, 5, "Herri ___ jende asko bizi da.", "En aquellos pueblos vive mucha gente."], [7, 0, "Leiho ___ itsasoa ikusten da.", "Desde esta ventana se ve el mar."], [7, 1, "Kale ___ pasatzen da autobusa.", "El autobús pasa por esa calle."], [7, 2, "Herri ___ dator nire amona.", "Mi abuela viene de aquel pueblo."], [7, 3, "Ate ___ ezin da pasatu.", "No se puede pasar por estas puertas."], [7, 4, "Leiho ___ ez da ezer ikusten.", "Desde esas ventanas no se ve nada."], [7, 5, "Mendi ___ jaisten da ibaia.", "El río baja de aquellas montañas."], [8, 0, "Herri ___ duela bi urte etorri nintzen.", "Llegué a este pueblo hace dos años."], [8, 1, "Eskola ___ joango naiz bihar.", "Mañana iré a esa escuela."], [8, 2, "Hiri ___ ez naiz sekula joan.", "Nunca he ido a aquella ciudad."], [8, 3, "Auzo ___ etorkin asko etorri dira.", "Han llegado muchos inmigrantes a estos barrios."], [8, 4, "Herri ___ autobusez joaten gara.", "Vamos a esos pueblos en autobús."], [8, 5, "Mendi ___ igo nahi dugu udan.", "Queremos subir a aquellas montañas en verano."], [9, 0, "Kale ___ oinez joan nintzen.", "Fui andando hasta esta calle."], [9, 1, "Zubi ___ ibiliko gara.", "Caminaremos hasta ese puente."], [9, 2, "Eliza ___ korrika joan zen.", "Fue corriendo hasta aquella iglesia."], [9, 3, "Kale ___ iritsi da uholdea.", "La inundación ha llegado hasta estas calles."], [9, 4, "Mendi ___ iritsi dira elurrak.", "La nieve ha llegado hasta esos montes."], [9, 5, "Herri ___ eramango zaitut autoz.", "Te llevaré en coche hasta aquellos pueblos."], [10, 0, "Itsaso ___ doa ibaia.", "El río va hacia este mar."], [10, 1, "Zuhaitz ___ korrika joan zen txakurra.", "El perro fue corriendo hacia ese árbol."], [10, 2, "Mendi ___ zihoazen hodeiak.", "Las nubes iban hacia aquel monte."], [10, 3, "Kale ___ doa jendea.", "La gente va hacia estas calles."], [10, 4, "Herri ___ abiatu ziren.", "Se pusieron en camino hacia esos pueblos."], [10, 5, "Mendi ___ doa bide hau.", "Este camino va hacia aquellas montañas."], [11, 0, "Herri ___ jendea oso jatorra da.", "La gente que vive en este pueblo es muy simpática."], [11, 1, "Denda ___ erosketak ekarri ditut.", "He traído las compras que hice en esa tienda."], [11, 2, "Eskola ___ ikasleak zoriontsu daude.", "Los alumnos que estudian en aquella escuela están contentos."], [11, 3, "Kale ___ dendak berriak dira.", "Las tiendas que hay en estas calles son nuevas."], [11, 4, "Mendi ___ bideak ezagutzen ditut.", "Conozco los caminos que hay en esos montes."], [11, 5, "Herri ___ jaiak famatuak dira.", "Las fiestas que se celebran en aquellos pueblos son famosas."], [12, 0, "Gela ___ mahai berri bat behar dugu.", "Necesitamos una mesa nueva para esta habitación."], [12, 1, "Lan ___ ez naiz prest sentitzen.", "No me siento preparado/a para ese trabajo."], [12, 2, "Eraikin ___ diru asko beharko da.", "Se necesitará mucho dinero para aquel edificio."], [12, 3, "Jolas ___ ez dut denborarik.", "No tengo tiempo para estos juegos."], [12, 4, "Arazo ___ irtenbide bat bilatu behar dugu.", "Tenemos que buscar una solución para esos problemas."], [12, 5, "Egun ___ ez daukat planik.", "No tengo planes para aquellos días."]];
+function rep(t){return [t,t,t,t,t,t,t,t]}
+var LEVELS=[
+ {n:"Taula",seq:["match","lw","lc","lw","match","lc","lw","lw"]},
+ {n:"Pertsonak",lo:0,hi:5,seq:rep("sc")},
+ {n:"Lekuak",lo:6,hi:12,seq:rep("sc")},
+ {n:"Nahastuta",lo:0,hi:12,seq:["sc","sc","tf","sc","sc","tf","sc","sc"]},
+ {n:"Idatzi esaldietan",lo:0,hi:12,seq:rep("sw")},
+ {n:"Zuzena ala okerra",lo:0,hi:12,seq:["tf","sw","tf","tf","sw","tf","sw","tf"]},
+ {n:"Erronka",lo:0,hi:12,seq:rep("sw"),ng:1}
+];
+var SHOWGO={lw:1,sw:1};
+var TOTAL=8,PASS=6;
+var $=function(i){return document.getElementById(i)};
+function shuf(a){for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1)),t=a[i];a[i]=a[j];a[j]=t}return a}
+function ri(k){return Math.floor(Math.random()*k)}
+function nz(s){return s.toLowerCase().replace(/[\s.,!?]/g,"")}
+function fill(t,f){return t.replace("___",f)}
+function exOk(b,es){return '<div class="b">'+b+'</div><div class="es">'+es+'</div>'}
+function exBad(t){return "<b>Zergatia:</b><br>"+t}
+function why(c,d,f){return "<b>"+f+"</b> ("+DEM[d]+" + "+CASES[c]+") → "+REA[c]+(c<2&&d>2?" En plural, NOR y NORK son iguales: hauek, horiek, haiek.":"")}
+function distOpts(c,d,n){
+  var f=TAB[c][d],seen={},out=[f],sd=[],sc=[];seen[f]=1;
+  var grp=c<6?[0,1,2,3,4,5]:[6,7,8,9,10,11,12];
+  grp.forEach(function(k){if(k!==c)sd.push(TAB[k][d])});
+  for(var j=0;j<6;j++)if(j!==d)sc.push(TAB[c][j]);
+  sd=shuf(sd);sc=shuf(sc);
+  [sd[0],sd[1],sc[0],sd[2],sc[1],sd[3],sc[2]].forEach(function(x){if(out.length<n&&x&&!seen[x]){seen[x]=1;out.push(x)}});
+  return shuf(out);
+}
+function hint(d){return LEVELS[lv].ng?"":'<div class="hint"><span class="tag">'+DEM[d]+'</span></div>'}
+function okH(e,c,d,f){return exOk(fill(e[2],f),CASES[c]+" · "+DEM[d]+" = "+f)}
+function badH(e,c,d,f){return '<div class="b">'+fill(e[2],f)+'</div>'+exBad(why(c,d,f))}
+
+var save={open:1,stars:{}};
+try{var sv=JSON.parse(localStorage.getItem("erakusleak1"));if(sv&&sv.open)save=sv}catch(e){}
+function persist(){try{localStorage.setItem("erakusleak1",JSON.stringify(save))}catch(e){}}
+var lv=0,qi=0,hits=0,checked=false,chk=null,sp=[],si=0;
+function nextS(){var x=sp[si%sp.length];si++;return x}
+
+function drawPath(){
+  var p=$("path");p.innerHTML="";
+  LEVELS.forEach(function(L,i){
+    var b=document.createElement("button");
+    b.className="dot"+(i===lv?" on":"")+(save.stars[i]?" done":"");
+    b.textContent=i+1;b.title=L.n;b.setAttribute("aria-label",(i+1)+". maila: "+L.n);
+    b.disabled=i+1>save.open;
+    b.onclick=function(){start(i)};
+    p.appendChild(b);
+  });
+}
+function start(i){
+  lv=i;qi=0;hits=0;$("play").hidden=false;$("end").hidden=true;
+  var L=LEVELS[i];
+  sp=shuf(S.filter(function(x){return L.lo===undefined||(x[0]>=L.lo&&x[0]<=L.hi)}));si=0;
+  $("lname").textContent=(i+1)+". maila: "+L.n;
+  drawPath();ask();
+}
+function setFb(t,c){var f=$("fb");f.textContent=t;f.className="fb"+(c?" "+c:"")}
+function ask(){
+  checked=false;chk=null;setFb("","");$("ex").hidden=true;$("ex").innerHTML="";
+  $("count").textContent=(qi+1)+" / "+TOTAL;
+  $("bar").style.width=(qi/TOTAL*100)+"%";
+  var t=LEVELS[lv].seq[qi];
+  ({match:matchEx,lw:lw,lc:lc,sc:sc,sw:sw,tf:tf})[t]();
+  var g=$("go");g.textContent="Egiaztatu";g.hidden=!SHOWGO[t];
+}
+function done(ok,msg,html){
+  if(checked)return;checked=true;if(ok)hits++;
+  setFb(msg,ok?"ok":"bad");
+  if(html){var e=$("ex");e.innerHTML=html;e.hidden=false}
+  var g=$("go");g.hidden=false;g.textContent=qi+1>=TOTAL?"Emaitza ikusi":"Hurrengoa";
+  $("bar").style.width=((qi+1)/TOTAL*100)+"%";
+}
+function go(){
+  if(checked){qi++;qi>=TOTAL?finish():ask()}
+  else if(chk)chk();
+}
+function mkOpts(list,ans,wmsg,hOk,hBad){
+  var o=$("opts");
+  list.forEach(function(t){
+    var b=document.createElement("button");b.className="chip";b.textContent=t;
+    b.onclick=function(){
+      if(checked)return;
+      var ok=t===ans;b.className="chip "+(ok?"good":"wrong");
+      if(!ok)Array.prototype.forEach.call(o.children,function(k,i){if(list[i]===ans)k.className="chip good"});
+      done(ok,ok?"Oso ondo!":wmsg,ok?hOk:hBad);
+    };
+    o.appendChild(b);
+  });
+}
+var INP='<input id="inp" type="text" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" aria-label="Erantzuna">';
+function inputEx(ans,hOk,hBad){
+  var inp=$("inp");setTimeout(function(){inp.focus()},50);
+  chk=function(){
+    var v=nz(inp.value);if(!v)return setFb("Idatzi zure erantzuna.","");
+    var ok=v===nz(ans);inp.className=ok?"ok":"bad";inp.readOnly=true;
+    done(ok,ok?"Oso ondo!":"Zuzena: "+ans,ok?hOk:hBad);
+  };
+}
+
+function matchEx(){
+  var items=[],used={},tries=0;
+  while(items.length<4&&tries<100){
+    tries++;var c=ri(13),d=ri(6),f=TAB[c][d];
+    if(used[f])continue;used[f]=1;items.push({l:DEM[d]+" · "+CASES[c],f:f});
+  }
+  var right=shuf([0,1,2,3]);
+  var pairs=items.map(function(it){return it.l+" = "+it.f}).join("<br>");
+  $("stage").innerHTML='<p class="task">Lotu bakoitza bere formarekin</p><div class="cols"><div id="cl"></div><div id="cr"></div></div>';
+  var sl=null,sr=null,rest=4,bad=0,flash=false,bl={},br={};
+  function mk(i,side,txt){
+    var b=document.createElement("button");b.className="chip";b.textContent=txt;
+    b.onclick=function(){
+      if(b.disabled||flash||checked)return;
+      if(side==="l"){if(sl!==null)bl[sl].classList.remove("sel");sl=i}
+      else{if(sr!==null)br[sr].classList.remove("sel");sr=i}
+      b.classList.add("sel");
+      if(sl!==null&&sr!==null){
+        var x=bl[sl],y=br[sr];
+        if(sl===sr){
+          x.className=y.className="chip good";x.disabled=y.disabled=true;rest--;
+          if(!rest){
+            if(bad<=1)done(true,bad?"Ia-ia! Akats bat.":"Oso ondo!",'<div class="es">'+pairs+'</div>');
+            else done(false,"Akats gehiegi. Errepasatu taula.",'<div class="es">'+pairs+'</div>');
+          }
+        }else{
+          bad++;flash=true;x.classList.add("wrong");y.classList.add("wrong");
+          setTimeout(function(){x.className=y.className="chip";flash=false},550);
+        }
+        sl=sr=null;
+      }
+    };
+    (side==="l"?bl:br)[i]=b;$(side==="l"?"cl":"cr").appendChild(b);
+  }
+  items.forEach(function(it,i){mk(i,"l",it.l)});
+  right.forEach(function(i){mk(i,"r",items[i].f)});
+}
+function lc(){
+  var c=ri(13),d=ri(6),f=TAB[c][d];
+  $("stage").innerHTML='<p class="task">Aukeratu forma zuzena</p><div class="big2">'+DEM[d]+' · '+CASES[c]+'</div><div class="opts" id="opts"></div>';
+  mkOpts(distOpts(c,d,4),f,"Zuzena: "+f,exOk(DEM[d]+" · "+CASES[c]+" = "+f,REA[c]),exBad(why(c,d,f)));
+}
+function lw(){
+  var c=ri(13),d=ri(6),f=TAB[c][d];
+  $("stage").innerHTML='<p class="task">Idatzi forma zuzena</p><div class="big2">'+DEM[d]+' · '+CASES[c]+'</div>'+INP;
+  inputEx(f,exOk(DEM[d]+" · "+CASES[c]+" = "+f,REA[c]),exBad(why(c,d,f)));
+}
+function sc(){
+  var e=nextS(),c=e[0],d=e[1],f=TAB[c][d];
+  $("stage").innerHTML='<p class="task">Aukeratu forma zuzena</p><div class="estop">'+e[3]+'</div>'+hint(d)+'<div class="sent">'+e[2]+'</div><div class="opts" id="opts"></div>';
+  mkOpts(distOpts(c,d,4),f,"Zuzena: "+f,okH(e,c,d,f),badH(e,c,d,f));
+}
+function sw(){
+  var e=nextS(),c=e[0],d=e[1],f=TAB[c][d];
+  $("stage").innerHTML='<p class="task">Idatzi forma zuzena</p><div class="estop">'+e[3]+'</div>'+hint(d)+'<div class="sent">'+e[2]+'</div>'+INP;
+  inputEx(f,okH(e,c,d,f),badH(e,c,d,f));
+}
+function tf(){
+  var e=nextS(),c=e[0],d=e[1],f=TAB[c][d],good=Math.random()<.5;
+  var shown=good?f:shuf(distOpts(c,d,4).filter(function(x){return x!==f}))[0];
+  $("stage").innerHTML='<p class="task">Zuzena ala okerra?</p><div class="estop">'+e[3]+'</div>'+hint(d)+'<div class="sent">'+fill(e[2],"<b>"+shown+"</b>")+'</div><div class="opts" id="opts"></div>';
+  mkOpts(["Zuzena","Okerra"],good?"Zuzena":"Okerra",good?"Zuzena zen":"Okerra da. Zuzena: "+f,okH(e,c,d,f),badH(e,c,d,f));
+}
+
+function finish(){
+  var won=hits>=PASS,st=hits>=TOTAL?3:hits>=7?2:won?1:0,last=lv===LEVELS.length-1;
+  $("play").hidden=true;$("end").hidden=false;
+  $("stars").textContent="★".repeat(st)+"☆".repeat(3-st);
+  $("etitle").textContent=won?"Maila gaindituta!":"Ia-ia lortu duzu";
+  $("etext").textContent=TOTAL+"tik "+hits+" asmatu dituzu."+(won?"":" Gainditzeko "+PASS+" behar dituzu. Saiatu berriro!");
+  if(won){
+    save.stars[lv]=Math.max(save.stars[lv]||0,st);
+    if(!last&&save.open<lv+2)save.open=lv+2;
+    persist();
+    if(last)$("etext").textContent+=" Ibilbide osoa osatu duzu!";
+  }
+  var nx=$("next");nx.hidden=!(won&&!last);
+  nx.textContent="Joan "+(lv+2)+". mailara";nx.onclick=function(){start(lv+1)};
+  drawPath();
+}
+$("go").onclick=go;
+$("again").onclick=function(){start(lv)};
+document.addEventListener("keydown",function(e){
+  if($("play").hidden||e.key!=="Enter")return;
+  if(e.target.tagName==="INPUT"||e.target===document.body){e.preventDefault();go()}
+});
+start(Math.min(save.open,LEVELS.length)-1);
+</script>
+</body>
+</html>
